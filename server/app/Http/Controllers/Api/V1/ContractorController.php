@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Contractor;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\Contractor;
 
 class ContractorController extends Controller
 {
     public function create(Request $request)
-{
+    {
         $request->validate([
             'legal_name'         => 'required|string|max:200',
             'display_name'       => 'nullable|string|max:200',
@@ -57,8 +57,12 @@ class ContractorController extends Controller
         ]);
 
         return response()->json($contractor, 201);
-}
+    }
 
+    public function showAll()
+    {
+        return response()->json(Contractor::all());
+    }
 
     public function show($id)
     {

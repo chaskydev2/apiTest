@@ -7,23 +7,23 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/refresh', function () {
     try {
         $output = [];
-        
+
         // Limpiar cache de configuración
         Artisan::call('config:clear');
         $output[] = 'Config cache cleared: ' . Artisan::output();
-        
+
         // Limpiar cache de rutas
         Artisan::call('route:clear');
         $output[] = 'Route cache cleared: ' . Artisan::output();
-        
+
         // Limpiar cache de vistas
         Artisan::call('view:clear');
         $output[] = 'View cache cleared: ' . Artisan::output();
-        
+
         // Limpiar cache de eventos
         Artisan::call('event:clear');
         $output[] = 'Event cache cleared: ' . Artisan::output();
-        
+
         // Intentar limpiar cache de aplicación (puede fallar si hay problemas de DB)
         try {
             Artisan::call('cache:clear');
@@ -31,21 +31,21 @@ Route::get('/refresh', function () {
         } catch (\Exception $e) {
             $output[] = 'Application cache clear failed: ' . $e->getMessage();
         }
-        
+
         // Recrear cache de configuración
         Artisan::call('config:cache');
         $output[] = 'Config cache recreated: ' . Artisan::output();
-        
+
         // Optimizar autoload
         Artisan::call('optimize');
         $output[] = 'Application optimized: ' . Artisan::output();
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'All caches cleared successfully!',
             'details' => $output
         ]);
-        
+
     } catch (\Exception $e) {
         return response()->json([
             'status' => 'error',
@@ -73,4 +73,5 @@ Route::get('/app/assets/{path}', function ($path) {
 Route::get('/{path?}', function () {
     return file_get_contents(public_path('app/index.html'));
 })->where('path', '.*');
+
 

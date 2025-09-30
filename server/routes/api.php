@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\RolePermissionController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserRoleController;
+use App\Http\Controllers\Api\V1\ContractorController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')
@@ -34,10 +35,10 @@ Route::prefix('/v1')
     ->group(function () {
 
         Route::post('login', [AuthController::class, 'login']);
-        
+
         Route::get('agreements/all', [AgreementController::class, 'all']);
 
-        Route::get('announcements/all', [AnnouncementController::class, 'all']); 
+        Route::get('announcements/all', [AnnouncementController::class, 'all']);
 
         Route::get('banners/all', [BannerController::class, 'all']);
 
@@ -119,11 +120,11 @@ Route::prefix('/v1')
 
             Route::apiResource('beginnings', BeginningController::class);
 
-            Route::apiResource('moral_values', MoralValueController::class); 
+            Route::apiResource('moral_values', MoralValueController::class);
 
-            Route::apiResource('directivities', DirectivityController::class); 
+            Route::apiResource('directivities', DirectivityController::class);
 
-            Route::apiResource('requirements', RequirementController::class); 
+            Route::apiResource('requirements', RequirementController::class);
 
             Route::apiResource('agreements', AgreementController::class);
 
@@ -131,10 +132,17 @@ Route::prefix('/v1')
 
             Route::apiResource('faqs', faqController::class);
 
-            Route::apiResource('banners', BannerController::class);  
+            Route::apiResource('banners', BannerController::class);
 
             Route::apiResource('social_networks', SocialNetworkController::class);
 
-            Route::apiResource('payment', PaymentController::class); 
+            Route::apiResource('payment', PaymentController::class);
         });
+
+        Route::post('createContractor', [ContractorController::class,"create"]);
+        Route::get('getContractor', [ContractorController::class,"showAll"]);
+        Route::get('getContractor/{id}', [ContractorController::class,"show"]);
+        Route::delete('deleteContractor/{id}', [ContractorController::class,"destroy"]);
+        Route::put('updateContractor/{id}', [ContractorController::class,"update"]);
+
     });

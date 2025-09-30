@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\SocialNetworkController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\RolePermissionController;
+use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserRoleController;
 use Illuminate\Support\Facades\Route;
@@ -137,4 +138,5 @@ Route::prefix('/v1')
 
             Route::apiResource('payment', PaymentController::class); 
         });
+            Route::apiResource('services', ServiceController::class);
     });

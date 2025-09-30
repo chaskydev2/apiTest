@@ -81,3 +81,24 @@ php artisan serve
 cd client
 npm run dev
 ```
+### Base de datos 
+
+https://dbdiagram.io/d/68a4d9b3ec93249d1e55e8bc
+
+sergio 
+realizar api 
+contractors 
+
+yamil 
+Realizar api
+homeowner_profiles
+
+
+alberto 
+Realizar api 
+services 
+con services categories
+
+
+
+

@@ -1,0 +1,116 @@
+Prueba Técnica – Desarrollador(a) Laravel
+Duración sugerida: 3–4 horas
+Formato de entrega: Word (este documento) + Código en repositorio Git
+
+Parte C — Conocimientos básicos de servidores
+
+1) ¿Qué permisos asignarías a un archivo de llave privada y por qué?
+Respuesta: Solamente permisos de lectura y escritura para el dueño
+
+2) Comandos para limpiar cache de Laravel.
+Respuesta: 
+php artisan optimize:clear
+
+3) Cómo mantener workers de cola en producción.
+Respuesta: 
+Usando un administrador de procesos como Supervisor o systemd. Estos programas se configuran para iniciar el worker (php artisan queue:work), monitorearlo y reiniciarlo automáticamente si falla o se detiene.
+
+4) ¿Dónde revisar errores de app y servidor?
+Respuesta: Reviso usualmente las pruebas por medio de debugs directamente en el visual estudio primeramente, y si el problema no esta ahi entonces testeo de los endpoints por medio de Insomnia o Postman para verificar si la información que se esta mandando se se esta guardando o se esta también recibiendo de forma correcta, la estructuras de los json, y si aun existe algun problema referente al servidor reviso el archivo laravel.log donde se encuentran las.
+
+5) Esquema básico de .htaccess para SPA.
+Respuesta: 
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+6) Comando para backup/restore MySQL.
+Respuesta:
+Para guardar un backup: mysqldump -u [nombre de usuario] -p [nombre de la base de datos] > [nombre del archivo a guardarse com o backup].sql
+Para restaurar a partir de un backup mysql -u [nombre de usuario] -p [nombre base datos] < [nombre archivo backup].sql
+
+7) ¿Qué es OPcache y por qué ayuda?
+Respuesta: Es un pie cargado de los archivos para que cada que php no cargue el mismo archivo varias veces sino masbien lo cargue todo desde un procompilado
+
+8) Riesgos de exponer .env y cómo evitarlos.
+Respuesta: es de suma importancia no compartir el .env puesto que ahi tenemos las contraseñas a nuestra base de datos y el usuario con el cual se puede acceder a esta, ademas de otras funciones con información delicada para nuestra aplicación, de todas formas este archivo no se sube a GitHub cuando hacemos un push asi que podemos despreocuparnos de eso
+
+9) Comando ufw para abrir solo 80/443.
+Respuesta: 
+
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+10) Cómo asegurar permisos de storage y bootstrap/cache.
+Respuesta: 
+
+Para signar propiedad al grupo del servidor web
+sudo chown -R $USER:www-data storage bootstrap/cache
+
+Para asignar permisos de escritura al dueño y al grupo (775)
+sudo chmod -R 775 storage bootstrap/cache
+
+Parte D — SQL
+
+1) Top 3 categorías por promedio de rating.
+Respuesta SQL: 
+
+SELECT c.name AS category_name, AVG(r.rating_value) AS promedio_rating
+FROM categories c
+JOIN restaurants res ON c.id = res.category_id
+JOIN ratings r ON res.id = r.restaurant_id
+GROUP BY c.id
+ORDER BY average_rating DESC
+LIMIT 3;
+
+2) Conteo de favoritos en restaurantes especiales.
+Respuesta SQL: 
+
+SELECT res.name AS restaurant_name, COUNT(f.id) AS conteo_favoritos
+FROM restaurants res
+JOIN favorites f ON res.id = f.restaurant_id
+WHERE res.is_special = TRUE
+GROUP BY res.id
+ORDER BY favorite_count DESC;
+
+3) Restaurantes con nombre duplicado.
+Respuesta SQL: 
+
+SELECT name, COUNT(id) AS concidencias_o_duplicados_encontrados
+FROM restaurants
+GROUP BY name
+HAVING COUNT(id) > 1;
+
+Parte E — Debug rápido
+
+Analiza el siguiente snippet y encuentra problemas (escribe tu análisis debajo):
+
+public function index(Request $request)
+{
+    $q = Restaurant::query()->with('category');
+    if ($request->search) {
+        $q->where('name', 'like', "%$request->search%");
+    }
+    if ($request->special) {
+        $q->where('is_special', $request->special);
+    }
+    return RestaurantResource::collection(
+        Cache::remember('restaurants', 60, fn() => $q->paginate(10))
+    );
+}
+
+Respuesta: 
+La primera vez que se ejecute la consulta, ese resultado se almacenará. Todas las solicitudes que se realicen despuess, incluso si usan filtros de búsqueda, recibirán el mismo resultado genérico almacenado en caché, ignorando la búsqueda del usuario esto por que el cache es estático, es decir que este no se actualizara a medida que se hagan mas consultas.
+
+Rúbrica de Evaluación (100 pts)
+- A. Lógica/Algoritmia: 20 pts
+- B. Laravel Práctico: 55 pts
+- C. Servidores: 10 pts
+- D. SQL: 10 pts
+- E. Debug: 5 pts
+Bonus: +10 pts (Swagger, scopes, documentación clara, etc.)

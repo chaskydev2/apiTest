@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\RolePermissionController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserRoleController;
+use App\Http\Controllers\HomeownerProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')
@@ -135,6 +136,8 @@ Route::prefix('/v1')
 
             Route::apiResource('social_networks', SocialNetworkController::class);
 
-            Route::apiResource('payment', PaymentController::class); 
+            Route::apiResource('payment', PaymentController::class);
+
+            Route::apiResource('homeowner_profiles', HomeownerProfileController::class);
         });
     });
